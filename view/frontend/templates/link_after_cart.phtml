@@ -1,0 +1,119 @@
+<!--
+/**
+ * @author Ksolves Team
+ * @copyright Copyright (c) 2020 Ksolves (https://www.ksolves.com)
+ * @package Ksolves_Notifications
+ */
+-->
+<?php 
+$link= $block->ksLinkAfterCart();
+echo $link;
+
+/* Get current customer session   */
+$customerSession         = $block->getCustomerSessions();
+
+if($customerSession->isLoggedIn())
+{
+    $currentCustomerId   = $customerSession->getCustomer()->getId();
+    $currentGroupId      = $customerSession->getCustomer()->getGroupId();
+} ?>
+
+<div id="link-popup-modal" style="display:none;">
+	<div class="ks-notifications-data"></div>
+</div>
+
+<script>
+    require(
+        [
+            'jquery',
+            'Magento_Ui/js/modal/modal'
+        ],
+        function(
+            $,modal
+        ) {
+            $(".icon-after-cart").on('click',function(){ 	
+            	var options = {
+                    type: 'popup',
+                    responsive: true,
+                    innerScroll: true,
+                    modalClass: 'popup-modal',
+                    clickableOverlay: true,
+                    modalcloseBtn: true,
+                    title: 'Notifications',
+                    buttons: []
+                };
+                
+                var popup = modal(options, $('#link-popup-modal'));
+                $("#link-popup-modal").modal(options).modal('openModal'); 
+                $('.modal-footer').hide(); 
+                var timer;
+			    timer = setTimeout(function(){
+			    ksNotificationsData();
+			    }, 100);          
+
+            function ksNotificationsData(){
+            	$.ajax({
+		            url: '<?= $block->getBaseUrl().'notifications/index/popupData'; ?>',
+		            type: 'POST',
+		            data:{ },
+		            showLoader: true,
+		            success: function(response){
+		            	$('.ks-notifications-data').html(response);	               
+		            },
+		            error: function (xhr, ajaxOptions, thrownError) {
+		                var errorMsg = 'Ajax request failed: ' + xhr.responseText;
+		                $('.ks-notifications-data').text(errorMsg);
+		            }
+		        }); 
+            } 
+
+        });             
+    }); 
+</script>
+
+<?php if($customerSession->isLoggedIn()): ?>
+	<script>
+	require(['jquery'], function($) {
+	    $( document ).ready(function(){ 
+	    	notificationCount();
+	    });
+    	$(".icon-after-cart").on('click',function(){ 	
+    		notificationCount();
+    	});      
+		    	
+	    function notificationCount() {
+	    	//Perform Ajax request.
+	        $.ajax({
+	            url: '<?= $block->getBaseUrl().'notifications/index/notificationsCount'; ?>',
+	            type: 'POST',
+	            data:{
+	                    customer_id      : <?= $currentCustomerId ?>,
+	                    customer_group   : <?= $currentGroupId ?>
+	                },
+	            success: function(response){
+	                var total_count = parseInt(response);
+	                if (isNaN(total_count)) {
+	                    $('#link_ks_count').text('0');
+	                } else if (total_count > 9){
+	                    total_count = '9+';
+	                    $('#link_ks_count').text(total_count);
+	                } else {
+	                    $('#link_ks_count').text(total_count);
+	                }
+	            },
+	            error: function (xhr, ajaxOptions, thrownError) {
+	                var errorMsg = 'Ajax request failed: ' + xhr.responseText;
+	                $('#link_ks_count').text(errorMsg);
+	            }
+	        });
+	    }
+		   
+	});
+	</script>
+<?php else: ?>
+	<script>
+		require(['jquery'], function($) {    
+		    $('#link_ks_count').text('0');	   
+		});
+	</script>
+<?php endif; ?>

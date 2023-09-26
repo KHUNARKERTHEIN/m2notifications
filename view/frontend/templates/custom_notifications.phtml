@@ -1,0 +1,72 @@
+<?php 
+    /* Get Custom collections data for notifications */
+    $customNotifications= $block->getCustomCollections(); ?>
+<div class="notification-main">
+    <div class="ks-container">
+        <div class="ks-card">
+            <div class="ks-card-header ks-bg-green">
+                <?php if ($block->getPagerHtml()): ?>
+                    <div class="order-products-toolbar"><?= $block->getPagerHtml(); ?></div>
+                <?php endif ?>
+            </div>
+            <!-- FOREACH START  -->
+            <div class="ks-card-body">
+                <?php foreach ($customNotifications as $customNotific) : 
+                        $customImage         = $block->getCustomImage($customNotific->getCustomImage());
+                        $msg                 = $block->getMsgByFilter($customNotific->getCustomMessage()); 
+                        $customNotificationId= $customNotific->getCustomNotificationId();
+                        $currentCustomerId   = $block->getCustomerId();
+                        $readValue           = $block->getIsReadValue($currentCustomerId ,$customNotificationId) ; 
+                        $value               = $readValue == 0 ? '#f2f2f2' : 'white';?>
+                    <div class="notifications-list">
+                        <div class="ks-row" style="background:<?=$value ?>">
+                            <div class="notifications-thum">
+                                <a href="<?= $customNotific->getCustomUrl() ?>">
+                                    <img src="<?= $customImage ?>" class="col-image"/>
+                                </a>
+                            </div>
+                            <!-- thum img /end -->
+                            <div class="notification-content">
+                                <p class="p-text">
+                                    <?= $msg ?>   
+                                </p>
+                                <p class="date-text">
+                                <?= $block->getDateAndTime($customNotific->getCreatedAt()) ?>
+                                    <a class="btn-view-more ks_count_update" data-customerId="<?= $currentCustomerId ?>" data-customNotificId="<?= $customNotificationId ?>" href="<?= $customNotific->getCustomUrl() ?>" title="See Details" ></a>
+                                </p>
+                            </div>
+                            <!-- notification-content / end -->
+                        </div>
+                        <!-- ks-row / end -->
+                    </div> 
+                        
+                <?php endforeach; ?>
+            </div>
+            <!-- FOREACH END  --> 
+            <div class="ks-card-footer ks-bg-green">  
+                <?php if ($block->getPagerHtml()): ?>
+                    <div class="order-products-toolbar"><?= $block->getPagerHtml(); ?></div>
+                <?php endif ?>
+            </div>
+        </div>
+     </div>
+</div>
+
+<!-- if customer is not logged in then redirect to home page   -->
+<?php if(!$block->getCustomerId() || !$block->enableNotificationModule() || !$block->enableCustomNotification()) : ?>
+    <?php $block->getRedirect(); ?>
+<?php endif; ?>
+
+<!--  functinality for updating the count of notifications  -->
+<script type="text/x-magento-init">
+        {
+            ".notification-main": {
+                "ksNotificationsCount": {
+                    "urlToUpdateCount": "<?= $block->getBaseUrl().'notifications/index/update'; ?>"
+                }
+            }
+        }
+    </script>
+
+
+

@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Ksolves Team
+ * @copyright Copyright (c) 2020 Ksolves (https://www.ksolves.com)
+ * @package Ksolves_Notifications
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+	<!--   For Orders Notifications Admin grid   -->
+	<virtualType name="KsolvesOrdersNotificationsGridFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+		<arguments>
+			<argument name="appliers" xsi:type="array">
+				<item name="regular" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter</item>
+				<item name="fulltext" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\FulltextFilter</item>
+			</argument>
+		</arguments>
+	</virtualType>
+	<virtualType name="KsolvesOrdersNotificationsGridDataProvider" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+		<arguments>
+			<argument name="collection" xsi:type="object" shared="false">Ksolves\Notifications\Model\ResourceModel\OrdersNotifications\Collection</argument>
+			<argument name="filterPool" xsi:type="object" shared="false">KsolvesOrdersNotificationsGridFilterPool</argument>
+		</arguments>
+	</virtualType>
+	<virtualType name="Ksolves\Notifications\Model\ResourceModel\OrdersNotifications\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+		<arguments>
+			<argument name="mainTable" xsi:type="string">ksolves_orders_notifications</argument>
+			<argument name="resourceModel" xsi:type="string">Ksolves\Notifications\Model\ResourceModel\OrdersNotifications</argument>
+		</arguments>
+	</virtualType>
+	<type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+		<arguments>
+			<argument name="collections" xsi:type="array">
+				<item name="ksolves_ordersnotifications_index_listing_data_source" xsi:type="string">Ksolves\Notifications\Model\ResourceModel\OrdersNotifications\Grid\Collection</item>
+				<item name="ksolves_wishlistnotifications_index_listing_data_source" xsi:type="string">Ksolves\Notifications\Model\ResourceModel\WishlistNotifications\Grid\Collection</item>
+				<item name="ksolves_customnotifications_index_listing_data_source" xsi:type="string">Ksolves\Notifications\Model\ResourceModel\CustomNotifications\Grid\Collection</item>
+			</argument>
+		</arguments>
+	</type>
+
+	<!--   For Wishlist Notifications Admin grid   -->
+	<virtualType name="KsolvesWishlistNotificationsGridFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+		<arguments>
+			<argument name="appliers" xsi:type="array">
+				<item name="regular" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter</item>
+				<item name="fulltext" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\FulltextFilter</item>
+			</argument>
+		</arguments>
+	</virtualType>
+	<virtualType name="KsolvesWishlistNotificationsGridDataProvider" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+		<arguments>
+			<argument name="collection" xsi:type="object" shared="false">Ksolves\Notifications\Model\ResourceModel\WishlistNotifications\Collection</argument>
+			<argument name="filterPool" xsi:type="object" shared="false">KsolvesWishlistNotificationsGridFilterPool</argument>
+		</arguments>
+	</virtualType>
+	<virtualType name="Ksolves\Notifications\Model\ResourceModel\WishlistNotifications\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+		<arguments>
+			<argument name="mainTable" xsi:type="string">ksolves_wishlist_notifications</argument>
+			<argument name="resourceModel" xsi:type="string">Ksolves\Notifications\Model\ResourceModel\WishlistNotifications</argument>
+		</arguments>
+	</virtualType>
+
+	<!--   For Custom Notifications Admin grid   -->
+	<virtualType name="KsolvesCustomNotificationsGridFilterPool" type="Magento\Framework\View\Element\UiComponent\DataProvider\FilterPool">
+		<arguments>
+			<argument name="appliers" xsi:type="array">
+				<item name="regular" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\RegularFilter</item>
+				<item name="fulltext" xsi:type="object">Magento\Framework\View\Element\UiComponent\DataProvider\FulltextFilter</item>
+			</argument>
+		</arguments>
+	</virtualType>
+	<virtualType name="KsolvesCustomNotificationsGridDataProvider" type="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider">
+		<arguments>
+			<argument name="collection" xsi:type="object" shared="false">Ksolves\Notifications\Model\ResourceModel\CustomNotifications\Collection</argument>
+			<argument name="filterPool" xsi:type="object" shared="false">KsolvesCustomNotificationsGridFilterPool</argument>
+		</arguments>
+	</virtualType>
+	<virtualType name="Ksolves\Notifications\Model\ResourceModel\CustomNotifications\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+		<arguments>
+			<argument name="mainTable" xsi:type="string">ksolves_custom_notifications</argument>
+			<argument name="resourceModel" xsi:type="string">Ksolves\Notifications\Model\ResourceModel\CustomNotifications</argument>
+		</arguments>
+	</virtualType>
+
+	<!-- override the Magento\Sales\Controller\Adminhtml\Order\Unhold controller  -->
+	<preference for="Magento\Sales\Controller\Adminhtml\Order\Unhold" type="Ksolves\Notifications\Controller\Adminhtml\Sales\Order\KsSalesOrderUnhold" />
+
+	<!-- override the Magento\Wishlist\Controller\Index\Fromcart controller  -->
+	<preference for="Magento\Wishlist\Controller\Index\Fromcart" type="Ksolves\Notifications\Controller\Wishlist\Index\KsWishlistFromcart" />
+
+	<!-- override the Magento\Sales\Api\CreditmemoRepositoryInterface  -->
+	<type name="Magento\Sales\Api\CreditmemoRepositoryInterface">
+        <plugin name="add_data_custom"
+                type="Ksolves\Notifications\Model\Plugin\CreditmemoAddData"/>
+    </type>
+	
+</config>

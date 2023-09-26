@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Ksolves Team
+ * @copyright Copyright (c) 2020 Ksolves (https://www.ksolves.com)
+ * @package Ksolves_Notifications
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../lib/internal/Magento/Framework/App/etc/routes.xsd">
+    <router id="admin">
+        <route id="ksolves_notifications" frontName="ksolves_notifications">
+            <module name="Ksolves_Notifications" />
+        </route>
+    </router>
+</config>

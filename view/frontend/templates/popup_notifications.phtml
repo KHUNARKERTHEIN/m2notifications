@@ -1,0 +1,318 @@
+<!--
+/**
+ * @author Ksolves Team
+ * @copyright Copyright (c) 2020 Ksolves (https://www.ksolves.com)
+ * @package Ksolves_Notifications
+ */
+-->
+<?php
+/* Get customer groups   */
+$customerGroupCollection = $block->getCustomerGroups();
+
+/* Get customer groups   */
+$customerSession         = $block->getCustomerSessions();
+
+/* Get no of notifications to display in pop-up box*/
+$noOfNotifications       = $block->numberOfNotification();
+
+if ($noOfNotifications == '') {
+    $notificationsCount = 4;
+} else {
+    $notificationsCount = $noOfNotifications;
+} ?>
+
+<!-- CUSTOMER LOGIN SESSION START HERE  -->
+<?php if($customerSession->isLoggedIn()) :
+    $currentCustomerId   = $customerSession->getCustomer()->getId();
+    $currentCustomerName = $customerSession->getCustomer()->getName() ;
+    $currentGroupId      = $customerSession->getCustomer()->getGroupId();
+    $collection          = $customerGroupCollection->load($currentGroupId); 
+    $currentCustomerGroup= $collection->getCustomerGroupCode();
+    /* get all notifications */
+    $collections         = $block->getCollections($currentCustomerId , $currentGroupId ); ?>
+    <!-- CHECK COLLECTION DATA -->
+    <?php if(!empty($collections)) :
+         /* Get collection in descending order of date*/
+        $sortedCollections = array_orderby_popup($collections, 'created_at', SORT_DESC);
+        /*  Display specific number of data  */
+        $sortedCollection  = array_slice($sortedCollections, 0, $notificationsCount); ?>
+
+            <!-- FOREACH START  -->
+            <?php foreach ($sortedCollection as $data) : ?>
+                 <!-- Show Order Notifications -->
+                <?php if (isset($data['order_id'])) : 
+                    $value            = $data['is_read'] == 0 ? '#f2f2f2' : 'white';
+                    $image            = $block->getOrderProductImage($data['order_id']);?>  
+                    <ul class="notifications-list border-color-green">                         
+                            <!--    check credit memo data  -->
+                        <?php if (isset($data['creditmemo_id'])) : 
+                            $creditmemoUrl         = $block->getBaseUrl().'sales/order/creditmemo/order_id/'.$data['order_id'].'/'; ?>
+                            <li class="ks-row" style="background:<?=$value ?>">
+                                <div class="notifications-thum">
+                                    <a class="ks_count_update" data-customerId="<?= $currentCustomerId ?>" data-creditmemoId="<?= $data['creditmemo_id'] ?>" href="<?= $creditmemoUrl ?>">
+                                        <img src="<?= $image ?>" class="col-image"/>
+                                    </a>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="p-text">Credit Memo is generated for your order id #<?= $data['increment_id'] ?>. Your Order is <?= $data['order_status'] ?>. Thanks for shopping.
+                                    </p>
+                                    <p class="p-text date-text">
+                                    <?= $block->getDateAndTime($data['created_at']) ?>
+                                    <a class="btn-view-more ks_count_update" data-customerId="<?= $currentCustomerId ?>" data-creditmemoId="<?= $data['creditmemo_id'] ?>" href="<?= $creditmemoUrl ?>" title="View Order"></a>
+                                    </p> 
+                                </div>
+                            </li>
+
+                            <!--    check shipment data  -->             
+                        <?php elseif (isset($data['invoice_id']) && isset($data['shipment_id'])) :
+                            $shipmentUrl         = $block->getBaseUrl().'sales/order/shipment/order_id/'.$data['order_id'].'/';  ?>
+                            <li class="ks-row" style="background:<?=$value ?>">
+                                <div class="notifications-thum">
+                                    <a class="ks_count_update" data-customerId="<?= $currentCustomerId ?>" data-shipmentId="<?= $data['shipment_id'] ?>" href="<?= $shipmentUrl ?>">
+                                        <img src="<?= $image ?>" class="col-image"/>
+                                    </a>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="p-text">Invoice and Shipment both are generated for your order id  #<?= $data['increment_id'] ?>. Your Order is in <?= $data['order_status'] ?> status. Thanks for shopping. </p>
+                                    <p class="p-text date-text">
+                                    <?= $block->getDateAndTime($data['created_at']) ?>
+                                    <a class="btn-view-more ks_count_update" data-customerId="<?= $currentCustomerId ?>" data-shipmentId="<?= $data['shipment_id'] ?>" href="<?= $shipmentUrl ?>" title="View Order" ></a>
+                                    </p>
+                                </div>
+                            </li>
+                            <!--    check shipment data  -->             
+                        <?php elseif (isset($data['shipment_id'])) :
+                            $shipmentUrl         = $block->getBaseUrl().'sales/order/shipment/order_id/'.$data['order_id'].'/';  ?>
+                            <li class="ks-row" style="background:<?=$value ?>">
+                                <div class="notifications-thum">
+                                    <a class="ks_count_update" data-customerId="<?= $currentCustomerId ?>" data-shipmentId="<?= $data['shipment_id'] ?>" href="<?= $shipmentUrl ?>">
+                                        <img src="<?= $image ?>" class="col-image"/>
+                                    </a>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="p-text">Shipment is generated for your order id  #<?= $data['increment_id'] ?>. Your Order is in <?= $data['order_status'] ?> status. Thanks for shopping. </p>
+                                    <p class="p-text date-text">
+                                    <?= $block->getDateAndTime($data['created_at']) ?>
+                                    <a class="btn-view-more ks_count_update" data-customerId="<?= $currentCustomerId ?>" data-shipmentId="<?= $data['shipment_id'] ?>" href="<?= $shipmentUrl ?>" title="View Order" ></a>
+                                    </p>
+                                </div>
+                            </li>
+
+                            <!--    check invoice data  -->
+                        <?php elseif (isset($data['invoice_id'])) : 
+                            $invoiceUrl         = $block->getBaseUrl().'sales/order/invoice/order_id/'.$data['order_id'].'/'; ?>
+                            <li class="ks-row" style="background:<?=$value ?>">
+                                <div class="notifications-thum">
+                                    <a class="ks_count_update" data-customerId="<?= $currentCustomerId ?>" data-invoiceId="<?= $data['invoice_id'] ?>" href="<?= $invoiceUrl ?>">
+                                        <img src="<?= $image ?>" class="col-image"/>
+                                    </a>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="p-text"> Invoice has been generated for your order id #<?= $data['increment_id'] ?>. Your Order is in <?= $data['order_status'] ?> status. Thanks for shopping. </p>
+                                    <p class="p-text date-text">
+                                    <?= $block->getDateAndTime($data['created_at']) ?>
+                                    <a class="btn-view-more ks_count_update" data-customerId="<?= $currentCustomerId ?>" data-invoiceId="<?= $data['invoice_id'] ?>" href="<?= $invoiceUrl ?>" title="View Order"></a>
+                                    </p>
+                                </div>
+                            </li>
+
+                            <!--    check order status for hold -->
+                        <?php elseif ($data['order_status'] == "holded") :
+                            $orderUrl         = $block->getBaseUrl().'sales/order/view/order_id/'.$data['order_id'].'/';  ?>
+                            <li class="ks-row" style="background:<?=$value ?>">
+                                <div class="notifications-thum">
+                                    <a class="ks_count_update" data-customerId="<?= $currentCustomerId ?>" data-orderStatus="<?= $data['order_status'] ?>" data-orderId="<?= $data['order_id'] ?>" href="<?= $orderUrl ?>">
+                                        <img src="<?= $image ?>" class="col-image"/>
+                                    </a>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="p-text"> Your Order is on hold for order id #<?= $data['increment_id'] ?>.  </p>
+                                    <p class="p-text date-text">
+                                    <?=  $block->getDateAndTime($data['created_at']) ?>
+                                    <a class="btn-view-more ks_count_update" data-customerId="<?= $currentCustomerId ?>" data-orderStatus="<?= $data['order_status'] ?>" data-orderId="<?= $data['order_id'] ?>" href="<?= $orderUrl ?>" title="View Order"></a>
+                                    </p>
+                                </div>
+                            </li>
+
+                                    <!--    check order status for unhold -->
+                        <?php elseif ($data['order_status'] == "Unholded") :
+                            $orderUrl         = $block->getBaseUrl().'sales/order/view/order_id/'.$data['order_id'].'/';  ?>
+                            <li class="ks-row" style="background:<?=$value ?>">
+                                <div class="notifications-thum">
+                                    <a class="ks_count_update" data-customerId="<?= $currentCustomerId ?>" data-orderStatus="<?= $data['order_status'] ?>" data-orderId="<?= $data['order_id'] ?>" href="<?= $orderUrl ?>">
+                                        <img src="<?= $image ?>" class="col-image"/>
+                                    </a>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="p-text"> Your Order has been removed from hold status for order id #<?= $data['increment_id'] ?>.  </p>
+                                    <p class="p-text date-text">
+                                    <?=  $block->getDateAndTime($data['created_at']) ?>
+                                    <a class="btn-view-more ks_count_update" data-customerId="<?= $currentCustomerId ?>" data-orderStatus="<?= $data['order_status'] ?>" data-orderId="<?= $data['order_id'] ?>" href="<?= $orderUrl ?>" title="View Order" ></a>
+                                    </p>
+                                </div>
+                            </li>
+
+                            <!--    check order status for cancelled -->
+                        <?php elseif ($data['order_status'] == "canceled") :
+                            $orderUrl         = $block->getBaseUrl().'sales/order/view/order_id/'.$data['order_id'].'/';  ?>
+                            <li class="ks-row" style="background:<?=$value ?>">
+                                <div class="notifications-thum">
+                                    <a class="ks_count_update" data-customerId="<?= $currentCustomerId ?>" data-orderStatus="<?= $data['order_status'] ?>" data-orderId="<?= $data['order_id'] ?>" href="<?= $orderUrl ?>">
+                                        <img src="<?= $image ?>" class="col-image"/>
+                                    </a>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="p-text">Your Order has been cancelled for Order Id  is #<?= $data['increment_id'] ?>. </p>
+                                    <p class="p-text date-text">
+                                    <?=  $block->getDateAndTime($data['created_at']) ?>
+                                    <a class="btn-view-more ks_count_update" data-customerId="<?= $currentCustomerId ?>" data-orderStatus="<?= $data['order_status'] ?>" data-orderId="<?= $data['order_id'] ?>" href="<?= $orderUrl ?>" title="View Order"></a>
+                                    </p>
+                                </div>
+                            </li>
+
+                            <!-- else -->
+                        <?php else :  
+                            $orderUrl         = $block->getBaseUrl().'sales/order/view/order_id/'.$data['order_id'].'/';  ?>
+                            <li class="ks-row" style="background:<?=$value ?>">
+                                <div class="notifications-thum">
+                                    <a class="ks_count_update" data-customerId="<?= $currentCustomerId ?>" data-orderStatus="<?= $data['order_status'] ?>" data-orderId="<?= $data['order_id'] ?>" href="<?= $orderUrl ?>">
+                                        <img src="<?= $image ?>" class="col-image"/>
+                                    </a>
+                                </div>
+                                <div class="notification-content">
+                                    <p class="p-text">Thank you for placing your order. Your Order Id  is #<?= $data['increment_id'] ?>. Your Order is in <?= $data['order_status'] ?> status. Thanks for shopping.  </p>
+                                    <p class="p-text date-text">
+                                    <?=  $block->getDateAndTime($data['created_at']) ?>
+                                    <a class="btn-view-more ks_count_update" data-customerId="<?= $currentCustomerId ?>" data-orderStatus="<?= $data['order_status'] ?>" data-orderId="<?= $data['order_id'] ?>" href="<?= $orderUrl ?>" title="View Order"></a>
+                                    </p>
+                                </div>
+                            </li>
+                        <?php endif; ?>
+
+                    </ul>
+                <?php endif; ?>
+                <!-- Show Wishlist Notifications -->
+                <?php if (isset($data['product_id'])) : 
+                    $value           = $data['is_read'] == 0 ? '#f2f2f2' : 'white';
+                    $wishlistUrl     = $block->getBaseUrl().'wishlist';
+                    $wproductName    = $block->getWishlistProductName($data['product_id']);
+                    $wimage          = $block->getProductImage($data['product_id']);?>
+                    <ul class="notifications-list">     
+                        <li class="ks-row" style="background:<?=$value ?>">
+                            <div class="notifications-thum">
+                                <a class="ks_count_update" data-customerId="<?= $currentCustomerId ?>"  data-wishlistNotificId="<?= $data['wishlist_notification_id'] ?>" href="<?= $wishlistUrl ?>">
+                                    <img src="<?= $wimage  ?>" class="col-image"/>
+                                </a>
+                            </div>
+                            <div class="notification-content">
+                                <p class="p-text"> <?= $wproductName ?> has been added to your wish list.<p> 
+                                <p class="p-text date-text"> <?= $block->getDateAndTime($data['created_at']) ?>
+                                <a class="ks_count_update btn-view-more" data-customerId="<?= $currentCustomerId ?>" data-wishlistNotificId="<?= $data['wishlist_notification_id'] ?>" href="<?= $wishlistUrl ?>" title="View Wish list"></a>
+                                </p>
+                            </div>
+                        </li>
+                    </ul>           
+                <?php endif; ?> 
+                    <!-- Show Admin Custom Notifications -->
+                <?php if (isset($data['customer_group'])) :
+                    $customImage         = $block->getCustomImage($data['custom_image']); 
+                    $customNotificationId= $data['custom_notification_id'] ; 
+                    $readValue           = $block->getIsReadValue($currentCustomerId ,$customNotificationId) ;
+                    $value               = $readValue == 0 ? '#f2f2f2' : 'white';?>
+                    <ul class="notifications-list border-color-green" >     
+                        <li class="ks-row" style="background:<?=$value ?>">
+                            <div class="notifications-thum">
+                                <a href="<?= $data['custom_url']; ?>">
+                                    <img src="<?= $customImage ?>" class="col-image"/>
+                                </a>
+                            </div>
+                            <div class="notification-content">
+                                <p class="p-text" style="word-break: break-all;"><strong>Admin Notifications for <?= $currentCustomerGroup ?> group of customers</strong><br/>
+                                <?= $block->getMsgByFilter($data['custom_message']) ?>  </p>
+                                <p class="p-text date-text"> 
+                                    <?= $block->getDateAndTime($data['created_at']) ?>
+                                    <a href="<?= $data['custom_url']; ?>" class="ks_count_update btn-view-more" data-customerId="<?= $currentCustomerId ?>" data-customNotificId="<?= $customNotificationId ?>" title="See Details" > </a>
+                                </p>
+                            </div>
+                        </li>
+                    </ul>
+                <?php endif; ?> 
+            <?php endforeach; ?>
+            <!-- FOREACH END -->
+            <button class="btn btn-viewall" onclick="window.location.href = '<?= $block->getBaseUrl().'notifications'?>'">View All Notifications</button>
+    <?php else : ?>
+            <div class="notification-content no-any-notification">
+                <p>
+                    <?=  "There are no notifications yet."."</br>"; ?>     
+                </p>
+            </div>     
+      <?php endif; ?>
+      <!-- CUSTOMER LOGIN SESSION END HERE   -->
+<?php else : ?>
+           <!--  Show custom Notifications for guest user -->
+        <ul class="notifications-list">     
+            <li class="ks-row"> 
+                <div class="notification-content no-any-notification">
+                    <p class="p-text"><strong>Admin Notifications for Guest Customers </strong></p>
+                    <p>Hi Welcome, Thanks for visiting our store.</p>
+                    <p>Please Login into your account.</p> 
+                    <button  class="btn btn-viewall" onclick="window.location.href = '<?= $block->getBaseUrl().'customer/account/login'?>'">Login</button> 
+                </div>
+            </li>
+        </ul>   
+<?php endif; ?>
+
+
+<?php
+    function array_orderby_popup()
+    {
+        $args = func_get_args();
+        $data = array_shift($args);
+        foreach ($args as $n => $field) {
+            if (is_string($field)) {
+                $tmp = array();
+                foreach ($data as $key => $row)
+                    $tmp[$key] = $row[$field];
+                $args[$n] = $tmp;
+                }
+        }
+        $args[] = &$data;
+        call_user_func_array('array_multisort', $args);
+        return array_pop($args);
+    }
+
+ ?>
+<script>
+    require(['jquery'], function($) {
+        $(".ks_count_update").on('click',function(){ 
+            $.ajax({
+                url: "<?= $block->getBaseUrl().'notifications/index/update'; ?>",
+                data:{
+                    custom_notific_id    : $(this).attr('data-customNotificId'),
+                    wishlist_notic_id    : $(this).attr('data-wishlistNotificId'),
+                    order_id             : $(this).attr('data-orderId'),
+                    order_status         : $(this).attr('data-orderStatus'),
+                    creditmemo_id        : $(this).attr('data-creditmemoId'),
+                    shipment_id          : $(this).attr('data-shipmentId'),
+                    invoice_id           : $(this).attr('data-invoiceId'),
+                    customer_id          : $(this).attr('data-customerId')
+                },
+                type:'POST',
+                success: function(response){
+                    true;
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    var errorMsg = 'Ajax request failed: ' + xhr.responseText;
+                    console.log(errorMsg);
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+
+
+

@@ -1,0 +1,72 @@
+CustomNotifications,Notifications personnalisées
+Add New Custom Notifications,Ajouter de nouvelles notifications personnalisées
+Save and Continue Edit,"
+Enregistrer et continuer à modifier"
+Edit Item '%1',Modifier l'élément '% 1'
+New Item,Nouvel article
+Custom Information,Informations personnalisées
+Add Custom Notification,Ajouter une notification personnalisée
+Custom Notification,Notification personnalisée
+Customer Group,Groupe de clients
+customer_group,Groupe de clients
+Image,Image
+custom_image,image_personnalisée
+" Allowed File Types : ( .jpg, .jpeg, .gif, .png) ","Types de fichiers autorisés: (.jpg, .jpeg, .gif, .png)"
+Url,Url
+custom_url,URL personnalisée
+Status,Statut de la commande
+Message,Message
+custom_message,message personnalisé
+Custom Notifications,Notifications personnalisées
+Orders Notifications,Notifications de commandes
+Wishlist Notifications,Notifications de liste de souhaits
+You deleted the item.,Vous avez supprimé l'élément.
+We can't delete item right now. Please review the log and try again.,Nous ne pouvons pas supprimer l'élément pour le moment. Veuillez consulter le journal et réessayer.
+We can't find a item to delete.,Impossible de trouver un élément à supprimer.
+This item no longer exists.,Cet article n'existe plus.
+Please correct the data sent.,Veuillez corriger les données envoyées.
+A total of %1 record(s) have been deleted.,"Au total,% 1 enregistrement (s) ont été supprimés."
+'A total of %1 record(s) have been ' .,«Un total de% 1 enregistrement (s) ont été».
+File cannot be saved to path: $1,Le fichier ne peut pas être enregistré dans le chemin: $ 1
+"Please select image in .jpg, .jpeg , .gif, .png format only.","Veuillez sélectionner l'image au format .jpg, .jpeg, .gif, .png uniquement."
+The wrong item is specified.,Le mauvais élément est spécifié.
+Please select image .,Veuillez sélectionner l'image.
+You saved the item.,Vous avez enregistré l'élément.
+Something went wrong while saving the item data. Please review the error log.,Une erreur s'est produite lors de l'enregistrement des données de l'article. Veuillez consulter le journal des erreurs.
+OrderNotifications,OrderNotifications
+OrdersNotifications,CommandesNotifications
+WishlistNotifications,Liste de souhaits
+Notifications,Notifications
+Enabled,Activée
+Disabled,désactivé
+Edit,Éditer
+"Sorry, something went wrong.","Désolé, quelque chose s'est mal passé."
+ksolves,ksolves
+Notifications Setting,Réglage des notifications
+Enable Notifications Module,Activer le module de notifications
+Enable Order Notifications,Activer les notifications de commande
+Enable Wishlist Notifications,Activer les notifications de liste de souhaits
+Enable Custom Notifications,Activer les notifications personnalisées
+Enter number of Notifications to display in POP-UP Box,Entrez le nombre de notifications à afficher dans la boîte POP-UP
+Upload Notifications Logo,Télécharger le logo des notifications
+Add New Custom Notification,Ajouter une nouvelle notification personnalisée
+Delete selected Notifications?,Supprimer les notifications sélectionnées?
+Delete Notifications,Supprimer les notifications
+Delete,Supprimer
+Change status,Changer le statut
+Enable,Activer
+Disable,Désactiver
+ID,Identifiant
+Custom Image,Image personnalisée
+Custom Url,URL personnalisée
+Custom Message,Message personnalisé
+Created At,Créé à
+Updated At,Mis à jour à
+Customer ID,N ° de client
+Customer Name ,Nom du client
+Customer Email ,Email client
+Order ID,numéro de commande
+Order Status,Statut de la commande
+Product Image,Image du produit
+Customer Name,Nom du client
+Product Name,Nom du produit

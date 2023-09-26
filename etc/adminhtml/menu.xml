@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Ksolves Team
+ * @copyright Copyright (c) 2020 Ksolves (https://www.ksolves.com)
+ * @package Ksolves_Notifications
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../Backend/etc/menu.xsd">
+    <menu>
+    	<!--  Notifications Menu  -->
+        <add id="ksolves_notifications::core" title="Notifications" module="Ksolves_Notifications" sortOrder="40" resource="Ksolves_Notifications::notifications"/>
+
+        <!-- Sub Menu of notifications Menu -->
+        <add id="ksolves_notifications::OrdersNotifications" title="Orders Notifications" module="Ksolves_Notifications" sortOrder="10" parent="ksolves_notifications::core" action="ksolves_notifications/OrdersNotifications/" resource="Ksolves_Notifications::ordersNotifications"/>
+
+        <add id="ksolves_notifications::WishlistNotifications" title="Wishlist Notifications" module="Ksolves_Notifications" sortOrder="20" parent="ksolves_notifications::core" action="ksolves_notifications/WishlistNotifications/" resource="Ksolves_Notifications::wishlistNotifications"/>
+
+        <add id="ksolves_notifications::CustomNotifications" title="Add Custom Notifications for Customers" module="Ksolves_Notifications" sortOrder="30" parent="ksolves_notifications::core" action="ksolves_notifications/CustomNotifications/" resource="Ksolves_Notifications::customNotifications"/>
+
+        <add id="ksolves_notifications::Settings" title="Settings" module="Ksolves_Notifications"
+        parent="ksolves_notifications::core" sortOrder="40" resource="Ksolves_Notifications::configuration"/>
+
+        <add id="ksolves_notifications::Notifications_Configurations" title="Configuration" module="Ksolves_Notifications" sortOrder="99" parent="ksolves_notifications::Settings" action="adminhtml/system_config/edit/section/notifications" resource="Ksolves_Notifications::notifications_configuration"/>
+        <!-- End -->
+    </menu>
+</config>

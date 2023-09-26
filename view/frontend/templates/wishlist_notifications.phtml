@@ -1,0 +1,73 @@
+<?php 
+
+$currentCustomerId = $block->getCustomerId();
+/* get wishlist collections for notifications */
+$wishlistNotifications= $block->getWishlistCollections(); ?>
+<div class="notification-main">
+    <div class="ks-container">
+        <div class="ks-card">
+            <div class="ks-card-header ks-bg-green">
+                <?php if ($block->getPagerHtml()): ?>
+                    <div class="order-products-toolbar"><?= $block->getPagerHtml(); ?></div>
+                <?php endif ?>
+            </div>
+
+            <!--FOREACH START   -->
+            <div class="ks-card-body">
+                <?php foreach ($wishlistNotifications as $wishlist) :
+                        $productImage    = $block->getWishlistProductImage($wishlist->getProductId());
+                        $productName     = $block->getWishlistProductName($wishlist->getProductId());
+                        $wishlistUrl     = $block->getBaseUrl().'wishlist'; 
+                        $value           = $wishlist->getIsRead() == 0 ? '#f2f2f2' : 'white'; ?>
+                       
+                       <div class="notifications-list">
+                        <div class="ks-row"  style="background:<?=$value ?>">
+                            <div class="notifications-thum">
+                                <a class="ks_count_update" data-customerId="<?= $currentCustomerId ?>" data-wishlistNotificId="<?= $wishlist->getId() ?>" href="<?= $wishlistUrl ?>">
+                                        <img src="<?= $productImage ?>" class="col-image"/>
+                                    </a>
+                            </div>
+                            <!-- thum img /end -->
+                            <div class="notification-content"> 
+                                <p class="p-text"><?= $productName ?> has been added to your wishlist.
+                                </p>
+                                <p class="date-text">  
+                                    <?= $block->getDateAndTime($wishlist->getCreatedAt()) ?> 
+                                    <a class="btn-view-more ks_count_update" data-customerId="<?= $currentCustomerId ?>" data-wishlistNotificId="<?= $wishlist->getId() ?>" href="<?= $wishlistUrl ?>" title="View Wishlist"></a>
+                                </p> 
+                            </div>
+                            <!-- notification-content / end -->
+                        </div>
+                        <!-- ks-row / end -->
+                    </div>  
+                <?php endforeach; ?>
+            </div>
+            <!--FOREACH END  -->    
+            <div class="ks-card-footer ks-bg-green">   
+                <?php if ($block->getPagerHtml()): ?>
+                        <div class="order-products-toolbar"><?= $block->getPagerHtml(); ?></div>
+                <?php endif ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- if customer is not logged in then redirect to home page   -->
+<?php if(!$block->getCustomerId() || !$block->enableNotificationModule() || !$block->enableWishlistNotification()) : ?>
+    <?php $block->getRedirect(); ?>
+<?php endif; ?>
+
+<!--  functinality for updating the count of notifications  -->
+<script type="text/x-magento-init">
+        {
+            ".notification-main": {
+                "ksNotificationsCount": {
+                    "urlToUpdateCount": "<?= $block->getBaseUrl().'notifications/index/update'; ?>"
+                }
+            }
+        }
+</script>
+
+
+
+

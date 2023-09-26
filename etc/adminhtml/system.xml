@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Ksolves Team
+ * @copyright Copyright (c) 2020 Ksolves (https://www.ksolves.com)
+ * @package Ksolves_Notifications
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="ksolves" translate="label" sortOrder="10">
+            <label>ksolves</label>
+        </tab>
+        <section id="ks_notifications" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Notifications</label>
+            <tab>ksolves</tab>
+            <resource>Ksolves_Notifications::notifications_config</resource>
+            <group id="notificationsconfig" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Notifications Setting</label>
+                <field id="enable" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Notifications Module</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="enable_orderStatus" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Order Notifications</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>    
+                <field id="enable_wishlistStatus" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Wishlist Notifications</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="enable_customStatus" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Custom Notifications</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field> 
+                <field id="no_of_notifications" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enter number of Notifications to display in POP-UP Box </label>
+                    <validate>validate-not-negative-number</validate>
+                </field> 
+                <field id="notifications_image" translate="label" type="image" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Upload Notifications Logo</label>
+                     <comment>Allowed file types: jpg, jpeg, gif, png</comment>
+                    <backend_model>Magento\Config\Model\Config\Backend\Image</backend_model>
+                    <base_url type="media" scope_info="1">ks/logo/images</base_url>
+                    <upload_dir config="system/filesystem/media" scope_info="1">ks/logo/images</upload_dir>
+                </field>  
+            </group>
+        </section>
+    </system>
+</config>

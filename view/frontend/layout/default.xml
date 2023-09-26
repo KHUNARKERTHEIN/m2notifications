@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Ksolves Team
+ * @copyright Copyright (c) 2019 Ksolves (https://www.ksolves.com)
+ * @package Ksolves_Notifications
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<head>
+   		<css src="Ksolves_Notifications::css/ks_style.css"/>  
+	</head>
+	<body>
+		<referenceBlock name="header.links">
+	         <block class="Ksolves\Notifications\Block\Links\Link" name="notifications-link" after="-"
+			template="Ksolves_Notifications::data.phtml"></block>
+	     </referenceBlock>
+		<referenceContainer name="header-wrapper">
+            <block class="Ksolves\Notifications\Block\Links\LinkAfterCart" name="notification-icon-after-cart" after="minicart" template="Ksolves_Notifications::link_after_cart.phtml" />
+        </referenceContainer>
+	</body>
+</page>

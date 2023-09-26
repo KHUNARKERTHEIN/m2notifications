@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Ksolves Team
+ * @copyright Copyright (c) 2019 Ksolves (https://www.ksolves.com)
+ * @package Ksolves_Notifications
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+	<head>
+   		<css src="Ksolves_Notifications::css/ks_style.css"/>  
+	</head>
+	<body>
+		 <referenceContainer name="content">
+            <block class="Ksolves\Notifications\Block\OrdersNotific" name="notifications-orders" template="Ksolves_Notifications::orders_notifications.phtml" cacheable="false">
+            </block>
+        </referenceContainer>
+	</body>
+</page>

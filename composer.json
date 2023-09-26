@@ -1,0 +1,40 @@
+{
+  "name": "ksolves/magento-2-notifications-extension",
+  "description": "Magento 2 Notifications extension",
+  "keywords": [
+    "magento 2",
+    "notifications",
+    "get notifications on wishlists or orders event",
+    "magento 2 extension"
+  ],
+
+  "config": {
+    "preferred-install": "dist",
+    "platform": {
+        "php": "~7.1.0||~7.2.0||~7.3.0"
+    }
+  },
+
+  "type": "magento2-module",
+  "version": "1.0.1",
+  "license": [
+    "OSL-3.0",
+    "AFL-3.0"
+  ],
+  "authors": [
+    {
+      "name": "Ksolves India Pvt. Ltd.",
+      "email": "magento@ksolves.com",
+      "homepage": "https://www.ksolves.com",
+      "role": "developer"
+    }
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Ksolves\\Notifications\\": ""
+    }
+  }
+}

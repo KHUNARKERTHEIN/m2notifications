@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Ksolves Team
+ * @copyright Copyright (c) 2020 Ksolves (https://www.ksolves.com)
+ * @package Ksolves_Notifications
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+	<!--  wishlist event to get current added product    -->
+    <event name="wishlist_add_product">
+        <observer name="ks_addtowishlist" instance="Ksolves\Notifications\Observer\AddToWishlist"/>
+    </event>
+
+    <!-- sales invoice event -->
+	<event name="sales_order_invoice_save_commit_after">
+	 	<observer name="ks_sales_order_invoice_save_commit_after" instance="Ksolves\Notifications\Observer\SalesOrderInvoiceObserver" />
+	</event>
+    
+    <!-- sales shipment event -->
+	<event name="sales_order_shipment_save_commit_after">
+	 	<observer name="ks_sales_order_shipment_save_commit_after" instance="Ksolves\Notifications\Observer\SalesOrderShipmentObserver" />
+	</event>
+   
+    <!-- sales event for all process -->
+	<event name="sales_order_save_commit_after">
+        <observer name="ks_sales_order_save_commit_after" instance="Ksolves\Notifications\Observer\SalesOrderSaveCommitObserver" />
+    </event>
+   
+    <!-- sales event multiple address and onepagesucess-->
+    <event name="checkout_submit_all_after">
+        <observer name="ks_checkout_submit_all_after" instance="Ksolves\Notifications\Observer\SalesOrderPlaceObserver" />
+    </event>
+
+</config>

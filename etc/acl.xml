@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Ksolves Team
+ * @copyright Copyright (c) 2020 Ksolves (https://www.ksolves.com)
+ * @package Ksolves_Notifications
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Ksolves_Notifications::notifications" title="Notifications" sortOrder="51">
+                    <resource id="Ksolves_Notifications::ordersNotifications" title="Orders Notifications" sortOrder="10"/>
+                    <resource id="Ksolves_Notifications::wishlistNotifications" title="Wishlist Notifications" sortOrder="20" />
+                    <resource id="Ksolves_Notifications::customNotifications" title="Custom Notifications" sortOrder="30">
+                        <resource id="Ksolves_Notifications::custom_notification_create" title="Create" translate="title" sortOrder="15" />
+                        <resource id="Ksolves_Notifications::custom_notification_read" title="Read" translate="title" sortOrder="20" />
+                        <resource id="Ksolves_Notifications::custom_notification_update" title="Update" translate="title" sortOrder="25" />
+                        <resource id="Ksolves_Notifications::custom_notification_delete" title="Delete" translate="title" sortOrder="30" />
+                    </resource>
+                </resource>
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="Ksolves_Notifications::notifications_configuration" title="Ksolves Notifications"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

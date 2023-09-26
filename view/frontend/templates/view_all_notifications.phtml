@@ -1,0 +1,332 @@
+<!--
+/**
+ * @author Ksolves Team
+ * @copyright Copyright (c) 2020 Ksolves (https://www.ksolves.com)
+ * @package Ksolves_Notifications
+ */
+-->
+<?php
+
+/* Get customer groups   */
+$customerGroupCollection = $block->getCustomerGroups();
+/* Get customer session   */
+$customerSession         = $block->getCustomerSessions(); ?>
+
+<!-- CUSTOMER LOGIN SESSION START HERE  -->
+<?php if($customerSession->isLoggedIn()) :
+    $currentCustomerId   = $customerSession->getCustomer()->getId();
+    $currentCustomerName = $customerSession->getCustomer()->getName() ;
+    $currentGroupId      = $customerSession->getCustomer()->getGroupId();
+    $collection          = $customerGroupCollection->load($currentGroupId); 
+    $currentCustomerGroup= $collection->getCustomerGroupCode();
+    /* get all type of notifications data  */
+    $wishlistNotifications= $block->getWishlistCollections($currentCustomerId);
+    $ordersNotifications  = $block->getOrdersCollections($currentCustomerId);
+    $customNotifications  = $block->getCustomCollections($currentGroupId);  ?>
+
+<div class="notification-main">
+    <div class="ks-container">
+        <div class="notifications-container">
+            <?php if ($block->enableWishlistNotification() == 1): ?>         
+                <div class="ks-card">
+                    <div class="wishlist-notifications view-all-flex h-100">
+                        <div class="ks-card-header">
+                            <i class="wishlist-notification-icon"></i>
+                            <h3>Wishlist <br/> Notifications</h3>
+                        </div>
+                         
+                            <?php if ($wishlistNotifications->getSize() > 0): ?>
+                            <!--   FOREACH START -->
+                                <div class="ks-card-body pr-10">
+                                    <?php foreach ($wishlistNotifications as $wishlist):    
+                                        $productImage    = $block->getWishlistProductImage($wishlist->getProductId());
+                                        $productName     = $block->getWishlistProductName($wishlist->getProductId());
+                                        $wishlistUrl     = $block->getBaseUrl().'wishlist';
+                                        $value           = $wishlist->getIsRead() == 0 ? '#566de2' : '#f3d6c6'; ?>
+                                        
+                                        <table>
+                                            <tr>
+                                                <td class="ks-padding">
+                                                    <a class="ks_update_count" data-wishlistNotificId="<?= $wishlist->getId() ?>" href="<?= $wishlistUrl ?>">
+                                                        <img src="<?= $productImage ?>" class="col-image"/>
+                                                    </a> 
+                                                </td>
+                                                <td> 
+                                                    <p>
+                                                        <?= $productName ?> has been added to your wishlist.
+                                                    </p>                               
+                                                    <p class="date-text"> 
+                                                        <?= $block->getDateAndTime($wishlist->getCreatedAt()) ?> 
+                                                        <a class="ks_update_count" data-wishlistNotificId="<?= $wishlist->getId() ?>" href="<?= $wishlistUrl ?>"> View Wishlist </a>
+                                                    </p>
+                                                </td>
+                                                <td>
+                                                    <div class="view-status" style="background:<?=$value ?>"></div>
+                                                </td>
+                                            </tr>
+                                        </table> 
+                                    <?php endforeach; ?>
+                                </div>
+                                <!-- FOREACH END  -->
+                                <div class="ks-card-footer">
+                                    <div class="text-center">
+                                        <button  class="btn btn-viewall" onclick="window.location.href = '<?= $block->getBaseUrl().'notifications/index/wishlistnotific'?>'"> View All Wishlist Notifications</button>
+                                    </div>
+                                </div>
+                            <?php else : ?>
+                                <div class="text-center ks-card-body">
+                                    <p>
+                                        There are no wishlist notifications yet.
+                                    </p>
+                                </div>
+                                <div class="ks-card-footer">
+                                    <div class="text-center">                                 
+                                        <button class="btn btn-viewall" onclick="window.location.href = '<?= $block->getBaseUrl().'notifications/index/wishlistnotific'?>'" disabled> View All Wishlist Notifications</button>
+                                    </div>
+                                </div>
+                            <?php endif; ?> 
+                    </div>
+                </div>
+            <?php endif;  ?>
+
+            <?php if ($block->enableOrderNotification() == 1): ?>
+                <div class="ks-card">
+                    <div class="orders-notifications view-all-flex h-100">
+                        <div class="ks-card-header">
+                            <i class="orders-notification-icon"></i>
+                            <h3>Order <br/> Notifications</h3>
+                        </div>
+                    
+                        <?php if ($ordersNotifications->getSize() > 0): ?>
+                            <!--   FOREACH START -->
+                            <div class="ks-card-body pr-10">
+                                <?php foreach ($ordersNotifications as $order):
+                                    $image            = $block->getOrderProductImage($order->getOrderId()); 
+                                    $creditMemoId     = $order->getCreditmemoId();
+                                    $invoiceId        = $order->getInvoiceId();
+                                    $shipmentId       = $order->getShipmentId();
+                                    $value            = $order->getIsRead() == 0 ? '#566de2' : '#f1becb'; ?>
+                                    <table>
+                                        <tr>
+                                            <!-- check creditmemo data   -->
+                                            <?php if (isset($creditMemoId)):
+                                            $creditmemoUrl         = $block->getBaseUrl().'sales/order/creditmemo/order_id/'.$order->getOrderId().'/'; ?> 
+                                                <td class="ks-padding ">
+                                                    <a class="ks_update_count" data-creditmemoId="<?= $creditMemoId ?>" href="<?= $creditmemoUrl ?>">
+                                                        <img src="<?= $image ?>" class="col-image"/>
+                                                    </a>
+                                                </td>                
+                                                <td>
+                                                    <p>Credit Memo is generated for  your order id is  #<?= $order->getIncrementId() ?>. Your Order is <?= $order->getOrderStatus() ?>. </p> 
+                                                    <p class="date-text"><?= $block->getDateAndTime($order->getCreatedAt()) ?> <a class="ks_update_count" data-creditmemoId="<?= $creditMemoId ?>" href="<?= $creditmemoUrl ?>" >View Order</a>
+                                                    </p>
+                                                </td>
+
+                                            <!-- check shipment data   -->
+                                            <?php elseif (isset($shipmentId) && isset($invoiceId)) :
+                                                $shipmentUrl         = $block->getBaseUrl().'sales/order/shipment/order_id/'.$order->getOrderId().'/';  ?>
+                                                <td class="ks-padding">
+                                                    <a class="ks_update_count" data-shipmentId="<?= $shipmentId ?>" href="<?= $shipmentUrl ?>">
+                                                        <img src="<?= $image ?>" class="col-image"/>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <p>Invoice and Shipment both are generated for your order id  #<?= $order->getIncrementId() ?>. Your Order is in <?= $order->getOrderStatus() ?> status. Thanks for shopping. </p>
+                                                    <p class="date-text"><?= $block->getDateAndTime($order->getCreatedAt()) ?> <a class="ks_update_count" data-shipmentId="<?= $shipmentId ?>" href="<?= $shipmentUrl ?>">View Order</a>
+                                                    </p>
+                                                </td>
+
+                                            <!-- check shipment data   -->
+                                            <?php elseif (isset($shipmentId)) :
+                                                $shipmentUrl         = $block->getBaseUrl().'sales/order/shipment/order_id/'.$order->getOrderId().'/';  ?>
+                                                <td class="ks-padding">
+                                                    <a class="ks_update_count" data-shipmentId="<?= $shipmentId ?>" href="<?= $shipmentUrl ?>">
+                                                        <img src="<?= $image ?>" class="col-image"/>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <p>Shipment is generated for your order id  #<?= $order->getIncrementId() ?>. Your Order is in <?= $order->getOrderStatus() ?> status. Thanks for shopping. </p>
+                                                    <p class="date-text"><?= $block->getDateAndTime($order->getCreatedAt()) ?> <a class="ks_update_count" data-shipmentId="<?= $shipmentId ?>" href="<?= $shipmentUrl ?>">View Order</a>
+                                                    </p>
+                                                </td>
+
+                                                <!-- check invoice data   -->
+                                            <?php elseif (isset($invoiceId)) :
+                                                $invoiceUrl         = $block->getBaseUrl().'sales/order/invoice/order_id/'.$order->getOrderId().'/'; ?>
+                                                <td class="ks-padding">
+                                                    <a class="ks_update_count" data-invoiceId="<?= $invoiceId ?>" href="<?= $invoiceUrl ?>">
+                                                        <img src="<?= $image ?>" class="col-image"/>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <p>Invoice has been generated for your order id #<?= $order->getIncrementId() ?>. Your Order is in <?= $order->getOrderStatus() ?> status. Thanks for shopping.  </p>
+                                                    <p class="date-text"><?= $block->getDateAndTime($order->getCreatedAt()) ?> <a class="ks_update_count" data-invoiceId="<?= $invoiceId ?>" href="<?= $invoiceUrl ?>" >View Order</a>
+                                                    </p>
+                                                </td>
+
+                                                <!-- check order status for hold   -->
+                                            <?php elseif ($order->getOrderStatus() == "holded") :
+                                                $orderUrl         = $block->getBaseUrl().'sales/order/view/order_id/'.$order->getOrderId().'/'; ?>
+                                                <td class="ks-padding">
+                                                    <a class="ks_update_count" data-orderStatus="<?= $order->getOrderStatus() ?>" data-orderId="<?= $order->getOrderId() ?>" href="<?= $orderUrl ?>">
+                                                        <img src="<?= $image ?>" class="col-image"/>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <p>Your Order is on hold for order id #<?= $order->getIncrementId() ?>. Thanks for shopping. </p>
+                                                    <p class="date-text"> <?= $block->getDateAndTime($order->getCreatedAt()) ?> <a class="ks_update_count" data-orderStatus="<?= $order->getOrderStatus() ?>" data-orderId="<?= $order->getOrderId() ?>" href="<?= $orderUrl ?>" >View Order</a>
+                                                    </p>
+                                                </td>
+
+                                                    <!-- check order status for hold   -->
+                                            <?php elseif ($order->getOrderStatus() == "Unholded") :
+                                                $orderUrl         = $block->getBaseUrl().'sales/order/view/order_id/'.$order->getOrderId().'/'; ?>
+                                                <td class="ks-padding">
+                                                    <a class="ks_update_count" data-orderStatus="<?= $order->getOrderStatus() ?>" data-orderId="<?= $order->getOrderId() ?>" href="<?= $orderUrl ?>">
+                                                        <img src="<?= $image ?>" class="col-image"/>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <p>Your Order has been removed from hold status for order id #<?= $order->getIncrementId() ?>. Thanks for shopping.  </p>
+                                                    <p class="date-text"><?= $block->getDateAndTime($order->getCreatedAt()) ?> <a class="ks_update_count" data-orderStatus="<?= $order->getOrderStatus() ?>" data-orderId="<?= $order->getOrderId() ?>" href="<?= $orderUrl ?>" >View Order</a>
+                                                    </p>
+                                                </td>
+
+                                                <!-- check order status for cancelled   -->
+                                            <?php elseif ($order->getOrderStatus() == "canceled") :
+                                                $orderUrl         = $block->getBaseUrl().'sales/order/view/order_id/'.$order->getOrderId().'/'; ?>
+                                                <td class="ks-padding">
+                                                    <a class="ks_update_count" data-orderStatus="<?= $order->getOrderStatus() ?>" data-orderId="<?= $order->getOrderId() ?>" href="<?= $orderUrl ?>">
+                                                        <img src="<?= $image ?>" class="col-image"/>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <p>Your Order has been cancelled for order id #<?= $order->getIncrementId() ?>. </p>
+                                                    <p class="date-text"><?= $block->getDateAndTime($order->getCreatedAt()) ?>  <a class="ks_update_count" data-orderStatus="<?= $order->getOrderStatus() ?>" data-orderId="<?= $order->getOrderId() ?>" href="<?= $orderUrl ?>" >View Order</a>
+                                                    </p>
+                                                </td>
+
+                                            <?php else : 
+                                                $orderUrl         = $block->getBaseUrl().'sales/order/view/order_id/'.$order->getOrderId().'/'; ?>
+                                                <td class="ks-padding">
+                                                    <a class="ks_update_count" data-orderStatus="<?= $order->getOrderStatus() ?>" data-orderId="<?= $order->getOrderId() ?>" href="<?= $orderUrl ?>">
+                                                        <img src="<?= $image ?>" class="col-image"/>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <p>Thank you for placing your order. Your Order Id is #<?= $order->getIncrementId() ?>. Your Order is in <?= $order->getOrderStatus() ?> status. Thanks for shopping. </p>
+                                                    <p class="date-text"> <?= $block->getDateAndTime($order->getCreatedAt()) ?> <a class="ks_update_count" data-orderStatus="<?= $order->getOrderStatus() ?>" data-orderId="<?= $order->getOrderId() ?>" href="<?= $orderUrl ?>" >View Order</a>
+                                                    </p>
+                                                </td>
+                                            <?php endif;  ?>
+                                            <td class="ks-unread">
+                                                <div class="view-status " style="background:<?=$value ?>"></div>
+                                            </td>
+                                        </tr>    
+                                    </table>                                
+                                <?php endforeach; ?> 
+                            </div>
+                            <!-- FOREACH END  -->
+                            <div class="ks-card-footer">
+                                <div class="text-center">
+                                    <button  class="btn btn-viewall" onclick="window.location.href = '<?= $block->getBaseUrl().'notifications/index/ordersnotific'?>'"> View All Order Notifications</button>
+                                </div>
+                            </div>
+                        <?php else : ?>
+                            <div class="ks-card-body text-center">
+                                <p>
+                                    There are no order notifications yet.
+                                </p> 
+                            </div>
+                            <div class="ks-card-footer">
+                                <div class="text-center">                               
+                                    <button class="btn btn-viewall" onclick="window.location.href = '<?= $block->getBaseUrl().'notifications/index/ordersnotific'?>'" disabled> View All Orders Notifications</button>
+                                </div>
+                            </div>
+                        <?php endif; ?> 
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($block->enableCustomNotification() == 1): ?>
+                <div class="ks-card">
+                    <div class="custom-notifications view-all-flex h-100">
+                        <div class="ks-card-header">
+                            <i class="custom-notification-icon"></i>
+                            <h3>Admin Notifications <br/> to Customer</h3>
+                        </div>
+                       
+                        <?php if ($customNotifications->getSize() > 0): ?>
+                        <!--   FOREACH START -->
+                            <div class="ks-card-body pr-10">
+                                <?php foreach ($customNotifications as $customNotific): 
+                                    $customImage     = $block->getCustomImage($customNotific->getCustomImage());
+                                    $customUrl       = $customNotific->getCustomUrl();
+                                    $msg             = $block->getMsgByFilter($customNotific->getCustomMessage()); 
+                                    $customNotificationId= $customNotific->getCustomNotificationId();
+                                    $readValue           = $block->getIsReadValue($currentCustomerId ,$customNotificationId) ; 
+                                    $value               = $readValue == 0 ? '#566de2' : '#f3d492'; ?>   
+                                    <table>
+                                        <tr >
+                                            <td class="ks-padding">
+                                                <a href="<?= $customNotific->getCustomUrl() ?>">
+                                                    <img src="<?= $customImage ?>" class="col-image"/>
+                                                </a>
+                                            </td>
+                                            <td> 
+                                                <p >    <?= $msg ?>  </p>
+                                                <p class="date-text"> <?= $block->getDateAndTime($customNotific->getCreatedAt()) ?>  
+                                                    <a class="ks_update_count" data-customNotificId="<?= $customNotificationId ?>" href="<?= $customNotific->getCustomUrl() ?>" >See Details</a>
+                                                </p>
+                                            </td>
+                                            <td class="ks-unread">
+                                                <div class="view-status " style="background:<?=$value ?>"></div>
+                                            </td>
+                                        </tr>
+                                    </table>                             
+                                <?php endforeach; ?>
+                            </div>
+                            <!-- FOREACH END  -->
+                            <div class="ks-card-footer">
+                                <div class="text-center">
+                                    <button  class="btn btn-viewall" onclick="window.location.href = '<?= $block->getBaseUrl().'notifications/index/customnotific'?>'"> View All Custom Notifications</button>
+                                </div>
+                            </div>
+                        <?php else : ?>
+                            <div class="ks-card-body text-center">
+                                <p>
+                                    There are no admin custom notifications yet.
+                                </p>                                
+                            </div>  
+                            <div class="ks-card-footer">
+                                <div class="text-center">                             
+                                    <button class="btn btn-viewall" onclick="window.location.href = '<?= $block->getBaseUrl().'notifications/index/customnotific'?>'" disabled> View All Custom Notifications</button>
+                                </div>
+                            </div>
+                        <?php endif; ?> 
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+<!-- if customer is not logged in then redirect to home page   -->
+<?php if(!$customerSession->isLoggedIn() || !$block->enableNotificationModule() || (!$block->enableWishlistNotification() && !$block->enableOrderNotification() && !$block->enableCustomNotification())) : ?>
+    <?php $block->getRedirect();  ?>
+<?php endif;   ?>
+
+<!--  functinality for updating the count of notifications  -->
+<?php if($customerSession->isLoggedIn()): ?>
+    <script type="text/x-magento-init">
+        {
+            ".notification-main": {
+                "ksViewAllNotificationsCount": {
+                    "urlToUpdateCount": "<?= $block->getBaseUrl().'notifications/index/update'; ?>",
+                    "customerId": "<?= $currentCustomerId ; ?>"
+                }
+            }
+        }
+    </script>
+<?php endif; ?>
